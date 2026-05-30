@@ -169,3 +169,13 @@ Add infinite scroll
 Add auth (Zustand)
 Add rich editor (Tiptap)
 Add AI features later
+
+
+💡 REAL PROJECT FLOW
+User opens homepage
+useInfiniteQuery fetches posts
+Axios calls backend
+TanStack Query caches result
+UI renders posts
+Scroll triggers next page
+More posts load automatically
