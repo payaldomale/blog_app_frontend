@@ -179,3 +179,76 @@ TanStack Query caches result
 UI renders posts
 Scroll triggers next page
 More posts load automatically
+
+
+
+src/
+│
+├── api/
+│   ├── axios.js          → Axios instance (baseURL, interceptors, auth token handling)
+│   └── apiClient.js      → Wrapper for GET/POST/PATCH/DELETE requests
+│
+├── constants/
+│   └── apiEndpoints.js   → All backend API routes (auth, posts, comments, etc.)
+│
+├── features/
+│
+│   ├── auth/
+│   │   ├── Login.jsx         → Login UI + form handling
+│   │   ├── Register.jsx      → Register UI + form handling
+│   │   ├── authService.js    → API calls (login, register, logout, me)
+│   │   └── authStore.js      → Auth state (user, token, login/logout)
+│   │
+│   ├── posts/
+│   │   ├── Home.jsx          → Feed page (list of posts)
+│   │   ├── PostDetails.jsx   → Single post view page
+│   │   ├── CreatePost.jsx    → Create post form + editor
+│   │   ├── EditPost.jsx      → Edit existing post form
+│   │   ├── PostCard.jsx      → Single post preview UI
+│   │   ├── PostList.jsx      → List of posts renderer
+│   │   ├── postService.js    → Post APIs (CRUD, publish, fetch, etc.)
+│   │   │
+│   │   ├── comments/
+│   │   │   ├── CommentSection.jsx → Show + manage comments UI
+│   │   │   ├── CommentForm.jsx    → Add comment UI form
+│   │   │   └── commentService.js  → Comment APIs
+│   │   │
+│   │   ├── likes/
+│   │   │   ├── LikeButton.jsx     → Like/unlike button UI
+│   │   │   └── likeService.js     → Like APIs
+│   │   │
+│   │   └── tags/
+│   │       ├── TagList.jsx        → Display post tags UI
+│   │       └── tagService.js      → Tag APIs
+│   │
+│   ├── profile/
+│   │   ├── Profile.jsx        → User profile page UI
+│   │   └── userService.js     → User APIs (profile, update, fetch)
+│
+├── store/
+│   ├── authStore.js      → Auth state (user session, login/logout)
+│   ├── postStore.js      → UI state for posts (selected post, filters, etc.)
+│   └── uiStore.js        → Global UI state (modals, loaders, theme, etc.)
+│
+├── components/
+│   └── common/
+│       ├── Navbar.jsx        → Navigation bar UI
+│       ├── Loader.jsx        → Loading spinner UI
+│       ├── Pagination.jsx    → Page navigation UI
+│       └── Button.jsx        → Reusable button component
+│
+├── layouts/
+│   ├── MainLayout.jsx     → Layout for logged-in pages (Navbar + content)
+│   └── AuthLayout.jsx     → Layout for login/register pages
+│
+├── routes/
+│   └── AppRoutes.jsx      → React Router configuration (all routes)
+│
+├── hooks/
+│   └── useDebounce.js     → Debounce input values (search optimization)
+│
+├── utils/
+│   ├── formatDate.js      → Format timestamps to readable date
+│   └── slugify.js         → Convert title → URL-friendly slug
+│
+└── main.jsx              → App entry point (React root rendering)
