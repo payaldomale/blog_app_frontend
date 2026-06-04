@@ -1,14 +1,7 @@
-// import axios from "axios";
-
-// export const api = axios.create({
-//     baseURL: import.meta.env.VITE_APP_API_PATH,
-//     withCredentials: true,
-// });
-
-
 import axios from "axios";
+import { useAuth } from "../store/authStore";
 
-export default axios.create({
+const api = axios.create({
     baseURL: import.meta.env.VITE_APP_API_PATH,
     timeout: 30000,
     headers: {
@@ -16,3 +9,18 @@ export default axios.create({
         "Content-Type": "application/json",
     },
 });
+
+api.interceptors.request.use(
+    (config) => {
+        const token = useAuth.getState().token;
+
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
+
+export default api;

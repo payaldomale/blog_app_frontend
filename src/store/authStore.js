@@ -4,29 +4,48 @@ import { persist } from "zustand/middleware";
 export const useAuth = create(
     persist(
         (set) => ({
-            user: "",
+            user: null,
+            userId: null,
+            token: null,
             loggedIn: false,
-            userId: 0,
-            token: "",
-            expiration: 0,
+
             setUser: (user) => set({ user }),
-            setLoggedIn: (loggedIn) => set({ loggedIn }),
+
             setUserId: (userId) => set({ userId }),
+
             setToken: (token) => set({ token }),
+
+            setLoggedIn: (loggedIn) => set({ loggedIn }),
+
             resetAuth: () =>
                 set({
-                    user: "",
+                    user: null,
+                    userId: null,
+                    token: null,
                     loggedIn: false,
-                    userId: 0,
-                    token: "",
-                    expiration: 0,
                 }),
         }),
         {
-            name: "auth-storage", // name of the item in the storage (must be unique)
-            // storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
-            partialize: (state) => ({ userId: state.userId, token: state.token }),
-            version: 1,
+            name: "auth-storage",
+
+            version: 1, // 👈 fixes migration warning
+
+            partialize: (state) => ({
+                user: state.user,
+                userId: state.userId,
+                token: state.token,
+                loggedIn: state.loggedIn,
+            }),
+
+            // 👇 important: prevents future migration crashes
+            migrate: (persistedState) => {
+                return {
+                    user: persistedState?.user ?? null,
+                    userId: persistedState?.userId ?? null,
+                    token: persistedState?.token ?? null,
+                    loggedIn: persistedState?.loggedIn ?? false,
+                };
+            },
         }
     )
 );

@@ -1,2 +1,2 @@
-export const LOGIN = "api/login";
-export const REGISTER = "api/signup";
+export const LOGIN = "api/auth/login";
+export const REGISTER = "api/auth/signup";

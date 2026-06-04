@@ -1,12 +1,13 @@
-function App() {
+import AppRoutes from "./routes/AppRoutes";
+import Navbar from "./components/common/Navbar";
 
+function App() {
   return (
     <>
-      <section id="center">
-        <h1 className="text-2xl text-center mt-4">Hello World!!!</h1>
-      </section>
+      <Navbar />
+      <AppRoutes />
     </>
   )
 }
 
-export default App
+export default App;
