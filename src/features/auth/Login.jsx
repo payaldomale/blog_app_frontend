@@ -30,11 +30,18 @@ export default function Login() {
 
             setUser(data.user || null);
             setUserId(data.user?.id || null);
+            setUser(data.user || null);
+            setUserId(data.user?.id || null);
             setToken(data.token || null);
             setLoggedIn(true);
 
             toast.success("Welcome back 👋");
-            navigate("/");
+
+            setTimeout(() => {
+                navigate("/");
+            }, 50);
+            toast.success("Welcome back 👋");
+
         } catch (error) {
             toast.error(error.message || "Invalid credentials");
         }

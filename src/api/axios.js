@@ -16,8 +16,10 @@ api.interceptors.request.use(
 
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
+        } else {
+            delete config.headers.Authorization;
         }
-
+        // console.log("TOKEN IN REQUEST:", useAuth.getState().token);
         return config;
     },
     (error) => Promise.reject(error)

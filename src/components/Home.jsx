@@ -1,6 +1,36 @@
+import { useQuery } from "@tanstack/react-query";
+import { getAllPosts } from "../features/posts/postService";
+import PostCard from "../features/posts/PostCard";
+
 export default function Home() {
+    const { data, isLoading, isError } = useQuery({
+        queryKey: ["posts"],
+        queryFn: getAllPosts,
+    });
+
+    if (isLoading) {
+        return (
+            <div className="text-center mt-10 text-slate-500">
+                Loading posts...
+            </div>
+        );
+    }
+
+    if (isError) {
+        return (
+            <div className="text-center mt-10 text-red-500">
+                Failed to load posts
+            </div>
+        );
+    }
+
+    // Backend response safe handling
+    // console.log("API RESPONSE:", data);
+    const posts = data?.posts || [];
+
     return (
         <div className="min-h-screen bg-slate-50">
+
             {/* Header */}
             <div className="max-w-4xl mx-auto px-4 py-10">
                 <h1 className="text-4xl font-bold text-slate-900">
@@ -11,38 +41,18 @@ export default function Home() {
                 </p>
             </div>
 
-            {/* Posts container */}
+            {/* Posts */}
             <div className="max-w-4xl mx-auto px-4 space-y-6">
 
-                {/* Dummy Post Card */}
-                <div className="bg-white p-6 rounded-2xl shadow-sm border hover:shadow-md transition">
-                    <h2 className="text-xl font-semibold text-slate-900">
-                        Understanding React Query in 5 Minutes
-                    </h2>
-                    <p className="text-slate-600 mt-2">
-                        Learn how server state management works in modern React apps...
+                {posts.length === 0 ? (
+                    <p className="text-center text-slate-500">
+                        No posts found
                     </p>
-
-                    <div className="flex items-center justify-between mt-4 text-sm text-slate-500">
-                        <span>by John Doe</span>
-                        <span>2 min read</span>
-                    </div>
-                </div>
-
-                {/* Another Dummy Post */}
-                <div className="bg-white p-6 rounded-2xl shadow-sm border hover:shadow-md transition">
-                    <h2 className="text-xl font-semibold text-slate-900">
-                        Building Auth System with JWT
-                    </h2>
-                    <p className="text-slate-600 mt-2">
-                        Step-by-step guide to building authentication in MERN stack...
-                    </p>
-
-                    <div className="flex items-center justify-between mt-4 text-sm text-slate-500">
-                        <span>by Jane Smith</span>
-                        <span>4 min read</span>
-                    </div>
-                </div>
+                ) : (
+                    posts.map((post) => (
+                        <PostCard key={post.id} post={post} />
+                    ))
+                )}
 
             </div>
         </div>

@@ -48,7 +48,7 @@ export default function Navbar() {
                         <>
                             {/* Create Post */}
                             <button
-                                onClick={() => navigate("/create")}
+                                onClick={() => navigate("/posts/create")}
                                 className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded-full text-sm hover:bg-slate-800 transition"
                             >
                                 <FaPenNib />
