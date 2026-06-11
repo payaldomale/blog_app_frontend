@@ -1,12 +1,13 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { FaBars, FaTimes, FaPenNib, FaUserCircle } from "react-icons/fa";
 import { useAuth } from "../../store/authStore";
-import { FaPenNib, FaUserCircle } from "react-icons/fa";
 import toast from "react-hot-toast";
 
 export default function Navbar() {
-    const navigate = useNavigate();
-
+    const [open, setOpen] = useState(false);
     const { loggedIn, user, resetAuth } = useAuth();
+    const navigate = useNavigate();
 
     const handleLogout = () => {
         resetAuth();
@@ -14,52 +15,55 @@ export default function Navbar() {
         navigate("/login");
     };
 
-    return (
-        <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-slate-200">
-            <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    const NavLinks = ({ close }) => (
+        <nav className="flex flex-col gap-4 text-slate-700">
+            <Link onClick={close} to="/">Home</Link>
+            <Link onClick={close} to="/">Explore</Link>
+            <Link onClick={close} to="/">Trending</Link>
+        </nav>
+    );
 
-                {/* Left - Logo */}
-                <Link
-                    to="/"
-                    className="text-2xl font-bold text-slate-900 tracking-tight"
-                >
+    return (
+        <>
+            {/* Mobile Top Bar */}
+            <div className="md:hidden flex items-center justify-between px-4 py-3 border-b border-slate-200 bg-white sticky top-0 z-50">
+                <Link to="/" className="font-bold text-lg">
                     Blogify
                 </Link>
 
-                {/* Center - optional nav */}
-                <div className="hidden md:flex gap-6 text-sm text-slate-600">
-                    <Link to="/" className="hover:text-slate-900">
-                        Home
-                    </Link>
+                <button onClick={() => setOpen(true)}>
+                    <FaBars className="text-xl" />
+                </button>
+            </div>
 
-                    <Link to="/" className="hover:text-slate-900">
-                        Explore
-                    </Link>
+            {/* Desktop Sidebar */}
+            <aside className="hidden md:flex fixed left-0 top-0 h-screen w-72 border-r border-slate-200 bg-white flex-col p-6">
 
-                    <Link to="/" className="hover:text-slate-900">
-                        Trending
-                    </Link>
-                </div>
+                <Link to="/" className="text-2xl font-bold mb-10">
+                    Blogify
+                </Link>
 
-                {/* Right - Auth Section */}
-                <div className="flex items-center gap-4">
+                <NavLinks />
 
-                    {loggedIn ? (
+                {/* Bottom Section */}
+                <div className="mt-auto pt-6 border-t border-slate-200">
+
+                    {loggedIn && (
                         <>
-                            {/* Create Post */}
-                            <button
-                                onClick={() => navigate("/posts/create")}
-                                className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded-full text-sm hover:bg-slate-800 transition"
+                            {/* Write */}
+                            <Link
+                                to="/posts/create"
+                                className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded-full mb-4"
                             >
                                 <FaPenNib />
                                 Write
-                            </button>
+                            </Link>
 
-                            {/* User */}
-                            <div className="flex items-center gap-2 text-slate-700">
-                                <FaUserCircle className="text-xl" />
-                                <span className="text-sm hidden sm:block">
-                                    {user?.username || "User"}
+                            {/* User Info */}
+                            <div className="flex items-center gap-2 text-slate-700 mb-3">
+                                <FaUserCircle />
+                                <span className="text-sm">
+                                    {user?.email || user?.username || "User"}
                                 </span>
                             </div>
 
@@ -71,25 +75,72 @@ export default function Navbar() {
                                 Logout
                             </button>
                         </>
-                    ) : (
-                        <>
-                            <Link
-                                to="/login"
-                                className="text-sm text-slate-700 hover:text-black"
-                            >
-                                Login
-                            </Link>
-
-                            <Link
-                                to="/register"
-                                className="text-sm bg-indigo-600 text-white px-4 py-2 rounded-full hover:bg-indigo-700 transition"
-                            >
-                                Get Started
-                            </Link>
-                        </>
                     )}
+
                 </div>
-            </div>
-        </nav>
+
+            </aside>
+
+            {/* Mobile Drawer */}
+            {open && (
+                <div className="fixed inset-0 z-50 md:hidden">
+
+                    {/* Overlay */}
+                    <div
+                        className="absolute inset-0 bg-black/40"
+                        onClick={() => setOpen(false)}
+                    />
+
+                    {/* Drawer */}
+                    <div className="absolute left-0 top-0 h-full w-72 bg-white p-6 flex flex-col">
+
+                        <div className="flex justify-between items-center mb-8">
+                            <span className="font-bold text-lg">Menu</span>
+                            <button onClick={() => setOpen(false)}>
+                                <FaTimes />
+                            </button>
+                        </div>
+
+                        <NavLinks close={() => setOpen(false)} />
+
+                        {/* Bottom Section */}
+                        <div className="mt-auto pt-6 border-t border-slate-200">
+
+                            {loggedIn && (
+                                <>
+                                    {/* Write */}
+                                    <Link
+                                        onClick={() => setOpen(false)}
+                                        to="/posts/create"
+                                        className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded-full mb-4"
+                                    >
+                                        <FaPenNib />
+                                        Write
+                                    </Link>
+
+                                    {/* User */}
+                                    <div className="flex items-center gap-2 text-slate-700 mb-3">
+                                        <FaUserCircle />
+                                        <span className="text-sm">
+                                            {user?.email || user?.username || "User"}
+                                        </span>
+                                    </div>
+
+                                    {/* Logout */}
+                                    <button
+                                        onClick={handleLogout}
+                                        className="text-sm text-red-500"
+                                    >
+                                        Logout
+                                    </button>
+                                </>
+                            )}
+
+                        </div>
+
+                    </div>
+                </div>
+            )}
+        </>
     );
 }
