@@ -25,6 +25,7 @@ export const getAllPosts = async () => {
 // Get published posts
 export const getPublishedPosts = async () => {
     const res = await api.get(GET_PUBLISHED_POSTS);
+    // console.log(res.data)
     return res.data;
 };
 
