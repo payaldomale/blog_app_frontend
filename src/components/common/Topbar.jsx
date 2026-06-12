@@ -1,13 +1,45 @@
 import { FaSearch, FaUserCircle } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../../store/authStore";
+import { useNavigate } from "react-router-dom";
 
 export default function Topbar() {
-    const { user } = useAuth();
+    const { user, resetAuth } = useAuth();
     const [search, setSearch] = useState("");
+    const [open, setOpen] = useState(false);
+    const menuRef = useRef(null);
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        resetAuth();
+        navigate("/login");
+    };
+
+    // ✅ close on outside click
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (menuRef.current && !menuRef.current.contains(e.target)) {
+                setOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () =>
+            document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    const getInitials = (name) => {
+        if (!name) return "U";
+        return name
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .toUpperCase()
+            .slice(0, 2);
+    };
 
     return (
-        <header className="bg-white border-b border-slate-200">
+        <header className="bg-white border-b border-slate-200 relative">
 
             <div className="flex items-center justify-between px-6 py-3">
 
@@ -22,12 +54,91 @@ export default function Topbar() {
                     />
                 </div>
 
-                {/* User */}
-                <div className="flex items-center gap-2 ml-4">
-                    <FaUserCircle className="text-2xl text-slate-700" />
-                    <span className="text-sm text-slate-700 hidden sm:block">
-                        {user?.username || "User"}
-                    </span>
+                {/* Profile */}
+                <div ref={menuRef} className="relative ml-4">
+
+                    {/* Trigger */}
+                    <button
+                        onClick={() => setOpen(!open)}
+                        className="flex items-center gap-2 hover:bg-slate-100 px-2 py-1 rounded-full transition"
+                    >
+                        {/* Avatar */}
+                        <div className="w-9 h-9 rounded-full bg-black text-white flex items-center justify-center text-sm font-semibold">
+                            {getInitials(user?.username || user?.email)}
+                        </div>
+
+                        <span className="text-sm text-slate-700 hidden sm:block">
+                            {user?.username || "User"}
+                        </span>
+                    </button>
+
+                    {/* Dropdown */}
+                    <div
+                        className={`
+                            absolute right-0 mt-2 w-56 bg-white border border-slate-200 
+                            rounded-xl shadow-lg overflow-hidden transition-all duration-150
+                            ${open ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}
+                        `}
+                    >
+
+                        {/* User Info Header */}
+                        <div className="px-4 py-3 border-b bg-slate-50">
+                            <p className="text-sm font-semibold text-slate-900">
+                                {user?.username || "User"}
+                            </p>
+                            <p className="text-xs text-slate-500 truncate">
+                                {user?.email}
+                            </p>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="py-1">
+
+                            <button
+                                onClick={() => {
+                                    navigate("/profile");
+                                    setOpen(false);
+                                }}
+                                className="w-full text-left px-4 py-2 text-sm hover:bg-slate-100"
+                            >
+                                Profile
+                            </button>
+
+                            <button
+                                onClick={() => {
+                                    navigate("/my-posts");
+                                    setOpen(false);
+                                }}
+                                className="w-full text-left px-4 py-2 text-sm hover:bg-slate-100"
+                            >
+                                My Posts
+                            </button>
+
+                            <button
+                                onClick={() => {
+                                    navigate("/settings");
+                                    setOpen(false);
+                                }}
+                                className="w-full text-left px-4 py-2 text-sm hover:bg-slate-100"
+                            >
+                                Settings
+                            </button>
+
+                        </div>
+
+                        {/* Divider */}
+                        <div className="border-t" />
+
+                        {/* Logout */}
+                        <button
+                            onClick={handleLogout}
+                            className="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-50"
+                        >
+                            Sign out
+                        </button>
+
+                    </div>
+
                 </div>
 
             </div>
