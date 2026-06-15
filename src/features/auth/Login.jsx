@@ -28,20 +28,18 @@ export default function Login() {
         try {
             const data = await loginUser(formData);
 
-            setUser(data.user || null);
-            setUserId(data.user?.id || null);
-            setUser(data.user || null);
-            setUserId(data.user?.id || null);
-            setToken(data.token || null);
+            // console.log("LOGIN RESPONSE:", data);
+
+            const user = data.user;
+
+            setUser(user);
+            setUserId(user.id);
+            setToken(data.token);
             setLoggedIn(true);
 
             toast.success("Welcome back 👋");
 
-            setTimeout(() => {
-                navigate("/");
-            }, 50);
-            toast.success("Welcome back 👋");
-
+            navigate("/");
         } catch (error) {
             toast.error(error.message || "Invalid credentials");
         }

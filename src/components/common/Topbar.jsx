@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 
 export default function Topbar() {
     const { user, resetAuth } = useAuth();
+    // console.log("TOPBAR USER OBJECT:", user);
+
     const [search, setSearch] = useState("");
     const [open, setOpen] = useState(false);
     const menuRef = useRef(null);
@@ -64,11 +66,12 @@ export default function Topbar() {
                     >
                         {/* Avatar */}
                         <div className="w-9 h-9 rounded-full bg-black text-white flex items-center justify-center text-sm font-semibold">
-                            {getInitials(user?.username || user?.email)}
+                            {getInitials(user?.email)}
                         </div>
 
                         <span className="text-sm text-slate-700 hidden sm:block">
-                            {user?.username || "User"}
+                            {user?.email?.split("@")[0] || "User"}
+                            {/* {console.log("name:", user?.email?.split("@")[0])} */}
                         </span>
                     </button>
 
@@ -84,7 +87,7 @@ export default function Topbar() {
                         {/* User Info Header */}
                         <div className="px-4 py-3 border-b bg-slate-50">
                             <p className="text-sm font-semibold text-slate-900">
-                                {user?.username || "User"}
+                                {user?.email?.split("@")[0] || "User"}
                             </p>
                             <p className="text-xs text-slate-500 truncate">
                                 {user?.email}

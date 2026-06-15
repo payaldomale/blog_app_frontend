@@ -10,6 +10,8 @@ export default function PostDetails() {
     const { id } = useParams();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
+
+    // ✅ Get userId from Zustand
     const { userId } = useAuth();
 
     const { data, isLoading, isError } = useQuery({
@@ -24,7 +26,6 @@ export default function PostDetails() {
         onSuccess: () => {
             toast.success("Post deleted successfully");
 
-            // ✅ FIXED: match Home query key
             queryClient.setQueryData(["published-posts"], (oldData) => {
                 if (!oldData) return oldData;
 
@@ -35,14 +36,18 @@ export default function PostDetails() {
                 );
 
                 if (oldData.data) {
-                    return { ...oldData, data: filtered };
+                    return {
+                        ...oldData,
+                        data: filtered,
+                    };
                 }
 
                 return filtered;
             });
 
-            // cleanup detail cache
-            queryClient.invalidateQueries({ queryKey: ["post", id] });
+            queryClient.removeQueries({
+                queryKey: ["post", id],
+            });
 
             navigate("/");
         },
@@ -63,14 +68,30 @@ export default function PostDetails() {
     };
 
     if (isLoading) {
-        return <div className="p-6 text-slate-500">Loading post...</div>;
+        return (
+            <div className="p-6 text-slate-500">
+                Loading post...
+            </div>
+        );
     }
 
     if (isError) {
-        return <div className="p-6 text-red-500">Failed to load post</div>;
+        return (
+            <div className="p-6 text-red-500">
+                Failed to load post
+            </div>
+        );
     }
 
     const post = data?.post;
+
+    // ✅ Ownership check
+    const isAuthor =
+        Number(post?.author_id) === Number(userId);
+
+    // console.log("userId:", userId);
+    // console.log("author_id:", post?.author_id);
+    // console.log("isAuthor:", isAuthor);
 
     return (
         <div className="bg-white min-h-screen">
@@ -82,17 +103,26 @@ export default function PostDetails() {
 
                 <div className="flex gap-3 mt-4 text-sm text-slate-500">
                     <span>User #{post?.author_id}</span>
+
                     <span>•</span>
+
                     <span>
                         {post?.created_at
-                            ? new Date(post.created_at).toLocaleDateString("en-IN")
+                            ? new Date(
+                                post.created_at
+                            ).toLocaleDateString("en-IN")
                             : "No date"}
                     </span>
+
                     <span>•</span>
-                    <span className="capitalize">{post?.status}</span>
+
+                    <span className="capitalize">
+                        {post?.status}
+                    </span>
                 </div>
 
-                {post?.author_id === userId && (
+                {/* ✅ Only author sees these buttons */}
+                {isAuthor && (
                     <div className="mt-6 flex gap-6 border-t pt-4">
 
                         <Link
@@ -109,14 +139,18 @@ export default function PostDetails() {
                             className="flex items-center gap-2 text-sm hover:text-red-600 disabled:opacity-50"
                         >
                             <FaTrash size={16} />
-                            {deleteMutation.isPending ? "Deleting..." : "Delete"}
+                            {deleteMutation.isPending
+                                ? "Deleting..."
+                                : "Delete"}
                         </button>
 
                     </div>
                 )}
 
                 <div className="mt-6 text-sm text-slate-600">
-                    ❤️ {post?.like_count ?? 0} • 💬 {post?.comment_count ?? 0}
+                    ❤️ {post?.like_count ?? 0}
+                    {" • "}
+                    💬 {post?.comment_count ?? 0}
                 </div>
 
                 <div className="my-8 border-t" />
