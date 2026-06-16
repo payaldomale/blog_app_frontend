@@ -18,3 +18,13 @@ export const GET_ALL_USERS = "api/user/getAllUsers";
 export const GET_USER_PROFILE = "api/user/search";
 export const UPDATE_USER_PROFILE = "api/user/profile";
 export const DELETE_USER = "api/user/delete";
+
+// comments
+export const CREATE_COMMENT = "api/comment/create";
+export const GET_COMMENTS_BY_POST = "api/comment/post";
+export const UPDATE_COMMENT = "api/comment";
+export const DELETE_COMMENT = "api/delete/comment";
+
+// likes
+export const LIKE_POST = "api/like";
+export const UNLIKE_POST = "api/unlike";

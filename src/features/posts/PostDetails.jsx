@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getPostById, deletePost } from "./postService";
@@ -6,12 +7,16 @@ import { FaRegEdit, FaTrash } from "react-icons/fa";
 import { handleApiError } from "../../utils/handleApiError";
 import toast from "react-hot-toast";
 
+import CommentSection from "./comments/CommentSection";
+
 export default function PostDetails() {
     const { id } = useParams();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
-    // ✅ Get userId from Zustand
+    const [showComments, setShowComments] = useState(false);
+
+    // Zustand auth
     const { userId } = useAuth();
 
     const { data, isLoading, isError } = useQuery({
@@ -26,24 +31,31 @@ export default function PostDetails() {
         onSuccess: () => {
             toast.success("Post deleted successfully");
 
-            queryClient.setQueryData(["published-posts"], (oldData) => {
-                if (!oldData) return oldData;
+            queryClient.setQueryData(
+                ["published-posts"],
+                (oldData) => {
+                    if (!oldData) return oldData;
 
-                const posts = oldData.data || oldData;
+                    const posts =
+                        oldData.data || oldData;
 
-                const filtered = posts.filter(
-                    (post) => post.id !== Number(id)
-                );
+                    const filtered =
+                        posts.filter(
+                            (post) =>
+                                post.id !==
+                                Number(id)
+                        );
 
-                if (oldData.data) {
-                    return {
-                        ...oldData,
-                        data: filtered,
-                    };
+                    if (oldData.data) {
+                        return {
+                            ...oldData,
+                            data: filtered,
+                        };
+                    }
+
+                    return filtered;
                 }
-
-                return filtered;
-            });
+            );
 
             queryClient.removeQueries({
                 queryKey: ["post", id],
@@ -58,9 +70,10 @@ export default function PostDetails() {
     });
 
     const handleDelete = () => {
-        const confirmDelete = window.confirm(
-            "Are you sure you want to delete this post?"
-        );
+        const confirmDelete =
+            window.confirm(
+                "Are you sure you want to delete this post?"
+            );
 
         if (!confirmDelete) return;
 
@@ -85,24 +98,24 @@ export default function PostDetails() {
 
     const post = data?.post;
 
-    // ✅ Ownership check
     const isAuthor =
-        Number(post?.author_id) === Number(userId);
-
-    // console.log("userId:", userId);
-    // console.log("author_id:", post?.author_id);
-    // console.log("isAuthor:", isAuthor);
+        Number(post?.author_id) ===
+        Number(userId);
 
     return (
         <div className="bg-white min-h-screen">
             <div className="max-w-3xl mx-auto px-6 py-10">
 
+                {/* Title */}
                 <h1 className="text-4xl font-bold text-slate-900">
                     {post?.title}
                 </h1>
 
+                {/* Meta */}
                 <div className="flex gap-3 mt-4 text-sm text-slate-500">
-                    <span>User #{post?.author_id}</span>
+                    <span>
+                        User #{post?.author_id}
+                    </span>
 
                     <span>•</span>
 
@@ -110,7 +123,9 @@ export default function PostDetails() {
                         {post?.created_at
                             ? new Date(
                                 post.created_at
-                            ).toLocaleDateString("en-IN")
+                            ).toLocaleDateString(
+                                "en-IN"
+                            )
                             : "No date"}
                     </span>
 
@@ -121,7 +136,7 @@ export default function PostDetails() {
                     </span>
                 </div>
 
-                {/* ✅ Only author sees these buttons */}
+                {/* Author Actions */}
                 {isAuthor && (
                     <div className="mt-6 flex gap-6 border-t pt-4">
 
@@ -134,11 +149,16 @@ export default function PostDetails() {
                         </Link>
 
                         <button
-                            onClick={handleDelete}
-                            disabled={deleteMutation.isPending}
+                            onClick={
+                                handleDelete
+                            }
+                            disabled={
+                                deleteMutation.isPending
+                            }
                             className="flex items-center gap-2 text-sm hover:text-red-600 disabled:opacity-50"
                         >
                             <FaTrash size={16} />
+
                             {deleteMutation.isPending
                                 ? "Deleting..."
                                 : "Delete"}
@@ -147,17 +167,45 @@ export default function PostDetails() {
                     </div>
                 )}
 
-                <div className="mt-6 text-sm text-slate-600">
-                    ❤️ {post?.like_count ?? 0}
-                    {" • "}
-                    💬 {post?.comment_count ?? 0}
+                {/* Likes + Comments */}
+                <div className="mt-6 flex items-center gap-6 text-sm text-slate-600">
+
+                    <span>
+                        ❤️{" "}
+                        {post?.like_count ??
+                            0}
+                    </span>
+
+                    <button
+                        onClick={() =>
+                            setShowComments(
+                                (
+                                    prev
+                                ) => !prev
+                            )
+                        }
+                        className="hover:text-blue-600 transition"
+                    >
+                        💬{" "}
+                        {post?.comment_count ??
+                            0}
+                    </button>
+
                 </div>
 
                 <div className="my-8 border-t" />
 
+                {/* Content */}
                 <article className="whitespace-pre-wrap leading-8 text-slate-700">
                     {post?.content}
                 </article>
+
+                {/* Comments Section */}
+                {showComments && (
+                    <CommentSection
+                        postId={post.id}
+                    />
+                )}
 
             </div>
         </div>

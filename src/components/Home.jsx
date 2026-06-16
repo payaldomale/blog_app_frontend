@@ -26,7 +26,6 @@ export default function Home() {
 
     const posts = data?.data || [];
 
-    // ✅ clean preview helper
     const getExcerpt = (text) => {
         if (!text) return "";
         return text.length > 180
@@ -35,7 +34,7 @@ export default function Home() {
     };
 
     return (
-        <div className="bg-white">
+        <div className="bg-white min-h-screen">
 
             {/* Header */}
             <div className="max-w-3xl mx-auto px-6 py-10">
@@ -48,10 +47,12 @@ export default function Home() {
             </div>
 
             {/* Feed */}
-            <div className="max-w-3xl mx-auto px-6">
+            <div className="max-w-3xl mx-auto px-6 pb-10">
 
                 {posts.length === 0 ? (
-                    <p className="text-slate-500">No published stories yet</p>
+                    <p className="text-slate-500">
+                        No published stories yet
+                    </p>
                 ) : (
                     <div className="divide-y divide-slate-200">
 
@@ -59,7 +60,13 @@ export default function Home() {
                             <Link
                                 key={post.id}
                                 to={`/posts/${post.id}`}
-                                className="block py-6 group"
+                                className="
+                                    block py-6 px-3
+                                    rounded-lg
+                                    hover:bg-slate-50
+                                    transition-all duration-200
+                                    group
+                                "
                             >
 
                                 {/* Title */}
@@ -67,24 +74,58 @@ export default function Home() {
                                     {post.title}
                                 </h2>
 
-                                {/* EXCERPT (NEW) */}
+                                {/* Excerpt */}
                                 <p className="mt-2 text-slate-600 leading-relaxed">
                                     {getExcerpt(post.content)}
                                 </p>
 
                                 {/* Meta */}
                                 <div className="mt-3 text-sm text-slate-500 flex items-center gap-2">
-                                    <span>by User #{post.author_id}</span>
+                                    <span>
+                                        by User #{post.author_id}
+                                    </span>
+
                                     <span>•</span>
+
                                     <span>
                                         {post.published_at
-                                            ? new Date(post.published_at).toLocaleDateString("en-IN", {
-                                                year: "numeric",
-                                                month: "short",
-                                                day: "numeric",
-                                            })
+                                            ? new Date(
+                                                post.published_at
+                                            ).toLocaleDateString(
+                                                "en-IN",
+                                                {
+                                                    year: "numeric",
+                                                    month: "short",
+                                                    day: "numeric",
+                                                }
+                                            )
                                             : "No date"}
                                     </span>
+                                </div>
+
+                                {/* Stats */}
+                                <div className="mt-4 flex items-center gap-6 text-sm text-slate-600">
+
+                                    {/* Likes */}
+                                    <span className="flex items-center gap-2">
+                                        <span className="text-pink-500">
+                                            ❤️
+                                        </span>
+                                        <span>
+                                            {post.like_count ?? 0}
+                                        </span>
+                                    </span>
+
+                                    {/* Comments */}
+                                    <span className="flex items-center gap-2">
+                                        <span className="text-indigo-500">
+                                            💬
+                                        </span>
+                                        <span>
+                                            {post.comment_count ?? 0}
+                                        </span>
+                                    </span>
+
                                 </div>
 
                             </Link>
