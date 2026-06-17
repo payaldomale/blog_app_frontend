@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createPostSchema } from "./postSchema";
@@ -6,9 +7,15 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
+// ✅ TAGS
+import TagSelector from "./tag/TagSelector";
+import { attachTag } from "./tag/tagService";
+
 export default function CreatePost() {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
+
+    const [selectedTags, setSelectedTags] = useState([]);
 
     const {
         register,
@@ -24,10 +31,23 @@ export default function CreatePost() {
     const mutation = useMutation({
         mutationFn: createPost,
 
-        onSuccess: () => {
+        onSuccess: async (res) => {
             toast.success("Post created successfully");
 
-            // ✅ React Query v5 correct syntax
+            const postId = res.post?.id || res.data?.id;
+
+            // ✅ ATTACH TAGS HERE
+            if (postId && selectedTags.length > 0) {
+                await Promise.all(
+                    selectedTags.map((tagId) =>
+                        attachTag({
+                            post_id: postId,
+                            tag_id: tagId,
+                        })
+                    )
+                );
+            }
+
             queryClient.invalidateQueries({
                 queryKey: ["posts"],
             });
@@ -55,32 +75,30 @@ export default function CreatePost() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
                 {/* Title */}
-                <div>
-                    <input
-                        {...register("title")}
-                        placeholder="Title"
-                        className="w-full border p-2 rounded"
-                    />
-                    {errors.title && (
-                        <p className="text-red-500 text-sm mt-1">
-                            {errors.title.message}
-                        </p>
-                    )}
-                </div>
+                <input
+                    {...register("title")}
+                    placeholder="Title"
+                    className="w-full border p-2 rounded"
+                />
+
+                {errors.title && (
+                    <p className="text-red-500 text-sm">
+                        {errors.title.message}
+                    </p>
+                )}
 
                 {/* Content */}
-                <div>
-                    <textarea
-                        {...register("content")}
-                        placeholder="Content"
-                        className="w-full border p-2 rounded h-40"
-                    />
-                    {errors.content && (
-                        <p className="text-red-500 text-sm mt-1">
-                            {errors.content.message}
-                        </p>
-                    )}
-                </div>
+                <textarea
+                    {...register("content")}
+                    placeholder="Content"
+                    className="w-full border p-2 rounded h-40"
+                />
+
+                {errors.content && (
+                    <p className="text-red-500 text-sm">
+                        {errors.content.message}
+                    </p>
+                )}
 
                 {/* Status */}
                 <select
@@ -91,7 +109,13 @@ export default function CreatePost() {
                     <option value="published">Published</option>
                 </select>
 
-                {/* Submit Button */}
+                {/* ✅ TAG SELECTOR */}
+                {/* <TagSelector
+                    selectedTags={selectedTags}
+                    setSelectedTags={setSelectedTags}
+                /> */}
+
+                {/* Submit */}
                 <button
                     type="submit"
                     disabled={mutation.isPending}
@@ -99,6 +123,7 @@ export default function CreatePost() {
                 >
                     {mutation.isPending ? "Creating..." : "Create Post"}
                 </button>
+
             </form>
         </div>
     );

@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getPublishedPosts } from "../features/posts/postService";
 import { Link } from "react-router-dom";
+import LikeButton from "../features/posts/likes/LikeButton";
 
 export default function Home() {
     const { data, isLoading, isError } = useQuery({
@@ -24,7 +25,12 @@ export default function Home() {
         );
     }
 
-    const posts = data?.data || [];
+    const rawPosts = data?.data || [];
+
+    const posts = rawPosts.map((post) => ({
+        ...post,
+        isLiked: post.liked_by_me ?? false,
+    }));
 
     const getExcerpt = (text) => {
         if (!text) return "";
@@ -36,7 +42,6 @@ export default function Home() {
     return (
         <div className="bg-white min-h-screen">
 
-            {/* Header */}
             <div className="max-w-3xl mx-auto px-6 py-10">
                 <h1 className="text-4xl font-bold text-slate-900">
                     Latest Stories
@@ -46,7 +51,6 @@ export default function Home() {
                 </p>
             </div>
 
-            {/* Feed */}
             <div className="max-w-3xl mx-auto px-6 pb-10">
 
                 {posts.length === 0 ? (
@@ -57,83 +61,64 @@ export default function Home() {
                     <div className="divide-y divide-slate-200">
 
                         {posts.map((post) => (
-                            <Link
+                            <div
                                 key={post.id}
-                                to={`/posts/${post.id}`}
                                 className="
                                     block py-6 px-3
                                     rounded-lg
                                     hover:bg-slate-50
                                     transition-all duration-200
                                     group
+                                    cursor-pointer
                                 "
                             >
+                                {/* CLICKABLE AREA (except like button) */}
+                                <Link to={`/posts/${post.id}`}>
 
-                                {/* Title */}
-                                <h2 className="text-2xl font-semibold text-slate-900 group-hover:text-black leading-snug">
-                                    {post.title}
-                                </h2>
+                                    <h2 className="text-2xl font-semibold text-slate-900 group-hover:text-black leading-snug">
+                                        {post.title}
+                                    </h2>
 
-                                {/* Excerpt */}
-                                <p className="mt-2 text-slate-600 leading-relaxed">
-                                    {getExcerpt(post.content)}
-                                </p>
+                                    <p className="mt-2 text-slate-600 leading-relaxed">
+                                        {getExcerpt(post.content)}
+                                    </p>
 
-                                {/* Meta */}
-                                <div className="mt-3 text-sm text-slate-500 flex items-center gap-2">
-                                    <span>
-                                        by User #{post.author_id}
-                                    </span>
+                                    <div className="mt-3 text-sm text-slate-500 flex items-center gap-2">
+                                        <span>by User #{post.author_id}</span>
+                                        <span>•</span>
+                                        <span>
+                                            {post.published_at
+                                                ? new Date(post.published_at).toLocaleDateString(
+                                                    "en-IN",
+                                                    {
+                                                        year: "numeric",
+                                                        month: "short",
+                                                        day: "numeric",
+                                                    }
+                                                )
+                                                : "No date"}
+                                        </span>
+                                    </div>
+                                </Link>
 
-                                    <span>•</span>
-
-                                    <span>
-                                        {post.published_at
-                                            ? new Date(
-                                                post.published_at
-                                            ).toLocaleDateString(
-                                                "en-IN",
-                                                {
-                                                    year: "numeric",
-                                                    month: "short",
-                                                    day: "numeric",
-                                                }
-                                            )
-                                            : "No date"}
-                                    </span>
-                                </div>
-
-                                {/* Stats */}
+                                {/* STATS AREA (NOT inside Link now) */}
                                 <div className="mt-4 flex items-center gap-6 text-sm text-slate-600">
 
-                                    {/* Likes */}
-                                    <span className="flex items-center gap-2">
-                                        <span className="text-pink-500">
-                                            ❤️
-                                        </span>
-                                        <span>
-                                            {post.like_count ?? 0}
-                                        </span>
-                                    </span>
+                                    {/* LIKE BUTTON (safe click now) */}
+                                    <LikeButton post={post} />
 
-                                    {/* Comments */}
+                                    {/* COMMENTS */}
                                     <span className="flex items-center gap-2">
-                                        <span className="text-indigo-500">
-                                            💬
-                                        </span>
-                                        <span>
-                                            {post.comment_count ?? 0}
-                                        </span>
+                                        <span className="text-indigo-500">💬</span>
+                                        <span>{post.comment_count ?? 0}</span>
                                     </span>
 
                                 </div>
-
-                            </Link>
+                            </div>
                         ))}
 
                     </div>
                 )}
-
             </div>
         </div>
     );

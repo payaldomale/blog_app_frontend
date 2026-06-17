@@ -26,5 +26,18 @@ export const UPDATE_COMMENT = "api/comment";
 export const DELETE_COMMENT = "api/delete/comment";
 
 // likes
-export const LIKE_POST = "api/like";
-export const UNLIKE_POST = "api/unlike";
+export const LIKE_POST = (postId) => `api/like/${postId}`;
+export const UNLIKE_POST = (postId) => `api/unlike/${postId}`;
+export const LIKE_STATUS = (postId) => `api/like-status/${postId}`;
+
+// tags
+export const CREATE_TAG = "api/tag/create";
+export const ATTACH_TAG = "api/tag/attach";
+
+export const GET_ALL_TAGS = "api/tag/all";
+
+export const GET_POSTS_BY_TAG = (tagId) =>
+    `api/tag/${tagId}/posts`;
+
+export const GET_TAGS_BY_POST = (postId) =>
+    `api/post/${postId}/tags`;

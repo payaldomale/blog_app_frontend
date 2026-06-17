@@ -1,109 +1,121 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { likePost, unlikePost, getLikesByPost } from "./likeService";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+    likePost,
+    unlikePost,
+    getLikeStatus
+} from "./likeService";
+
 import { useAuth } from "../../../store/authStore";
 import toast from "react-hot-toast";
 
-export default function LikeButton({ postId }) {
-    const { userId } = useAuth();
+export default function LikeButton({ post }) {
+
     const queryClient = useQueryClient();
 
-    const { data } = useQuery({
-        queryKey: ["likes", postId],
-        queryFn: () => getLikesByPost(postId),
-        enabled: !!postId,
+    const { loggedIn } = useAuth();
+
+    const {
+        data: likeData
+    } = useQuery({
+        queryKey: ["like-status", post.id],
+
+        queryFn: () =>
+            getLikeStatus(post.id),
+
+        enabled: loggedIn
     });
 
-    const likes = data?.data || [];
+    const liked =
+        likeData?.liked || false;
 
-    const isLiked = likes.some(
-        (l) => Number(l.user_id) === Number(userId)
-    );
-
-    // LIKE (OPTIMISTIC)
     const likeMutation = useMutation({
-        mutationFn: () => likePost(postId),
 
-        onMutate: async () => {
-            await queryClient.cancelQueries(["likes", postId]);
-
-            const prev = queryClient.getQueryData(["likes", postId]);
-
-            queryClient.setQueryData(["likes", postId], (old) => {
-                const current = old?.data || [];
-                return {
-                    ...old,
-                    data: [
-                        ...current,
-                        { user_id: userId },
-                    ],
-                };
-            });
-
-            return { prev };
-        },
-
-        onError: (err, _, context) => {
-            queryClient.setQueryData(["likes", postId], context.prev);
-        },
+        mutationFn: () =>
+            likePost(post.id),
 
         onSuccess: () => {
-            queryClient.invalidateQueries(["post", postId]);
-            queryClient.invalidateQueries(["published-posts"]);
+
+            queryClient.invalidateQueries({
+                queryKey: ["published-posts"]
+            });
+
+            queryClient.invalidateQueries({
+                queryKey: ["post", String(post.id)]
+            });
+
+            queryClient.invalidateQueries({
+                queryKey: ["like-status", post.id]
+            });
         },
+
+        onError: (err) => {
+            toast.error(
+                err?.response?.data?.message ||
+                "Error"
+            );
+        }
     });
 
-    // UNLIKE (OPTIMISTIC)
     const unlikeMutation = useMutation({
-        mutationFn: () => unlikePost(postId),
 
-        onMutate: async () => {
-            await queryClient.cancelQueries(["likes", postId]);
-
-            const prev = queryClient.getQueryData(["likes", postId]);
-
-            queryClient.setQueryData(["likes", postId], (old) => {
-                const current = old?.data || [];
-                return {
-                    ...old,
-                    data: current.filter(
-                        (l) => Number(l.user_id) !== Number(userId)
-                    ),
-                };
-            });
-
-            return { prev };
-        },
-
-        onError: (err, _, context) => {
-            queryClient.setQueryData(["likes", postId], context.prev);
-        },
+        mutationFn: () =>
+            unlikePost(post.id),
 
         onSuccess: () => {
-            queryClient.invalidateQueries(["post", postId]);
-            queryClient.invalidateQueries(["published-posts"]);
+
+            queryClient.invalidateQueries({
+                queryKey: ["published-posts"]
+            });
+
+            queryClient.invalidateQueries({
+                queryKey: ["post", String(post.id)]
+            });
+
+            queryClient.invalidateQueries({
+                queryKey: ["like-status", post.id]
+            });
         },
+
+        onError: (err) => {
+            toast.error(
+                err?.response?.data?.message ||
+                "Error"
+            );
+        }
     });
 
     const handleClick = () => {
-        if (isLiked) {
+
+        if (!loggedIn) {
+            return toast.error(
+                "Login required"
+            );
+        }
+
+        if (liked) {
             unlikeMutation.mutate();
-            toast.success("Unliked");
         } else {
             likeMutation.mutate();
-            toast.success("Liked");
         }
     };
 
     return (
         <button
             onClick={handleClick}
-            className="flex items-center gap-2 text-slate-600 hover:text-red-500 transition"
+            className="flex items-center gap-2"
         >
-            <span className="text-lg">
-                {isLiked ? "❤️" : "🤍"}
+            <span
+                className={`text-xl transition ${liked
+                    ? "text-red-500"
+                    : "text-gray-400"
+                    }`}
+            >
+                {liked ? "❤️" : "🤍"}
             </span>
 
-            <span>{likes.length}</span>
+            <span>
+                {post.like_count ?? 0}
+            </span>
         </button>
     );
 }
