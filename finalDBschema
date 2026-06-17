@@ -331,3 +331,313 @@ Week 4
 ✔ Optimizations
 
 ******************************************************
+| Component                 | Service                                             |
+| ------------------------- | --------------------------------------------------- |
+| Frontend (React/Vite)     | [Vercel](https://vercel.com?utm_source=chatgpt.com) |
+| Backend (Node.js/Express) | [Render](https://render.com?utm_source=chatgpt.com) |
+| Database (PostgreSQL)     | [Neon](https://neon.tech?utm_source=chatgpt.com)    |
+| Source Code               | [GitHub](https://github.com?utm_source=chatgpt.com) |
+
+***********************************************Deployment***********************************************
+
+# Blog App Deployment Guide
+
+## Tech Stack
+
+* Frontend: React + Vite
+* Backend: Node.js + Express
+* Database: PostgreSQL
+* Source Control: GitHub
+
+## Deployment Architecture
+
+Frontend (Vercel)
+↓
+Backend API (Render)
+↓
+PostgreSQL Database (Neon)
+
+---
+
+# Step 1: Push Project to GitHub
+
+Initialize Git if not already done:
+
+```bash
+git init
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git remote add origin YOUR_REPOSITORY_URL
+git push -u origin main
+```
+
+Expected structure:
+
+```txt
+project-root/
+├── frontend/
+├── backend/
+```
+
+---
+
+# Step 2: Create PostgreSQL Database
+
+Create a free PostgreSQL database using Neon.
+
+1. Sign up on Neon.
+2. Create a new project.
+3. Create a database.
+4. Copy the connection string.
+
+Example:
+
+```env
+DATABASE_URL=postgresql://user:password@host/database?sslmode=require
+```
+
+Store this securely.
+
+---
+
+# Step 3: Configure Backend Environment Variables
+
+Create `.env` inside backend:
+
+```env
+DATABASE_URL=YOUR_NEON_DATABASE_URL
+
+JWT_SECRET=YOUR_SECRET_KEY
+
+PORT=3000
+```
+
+Never commit `.env` files.
+
+---
+
+# Step 4: Deploy Backend on Render
+
+1. Login to Render.
+2. Click New Web Service.
+3. Connect GitHub repository.
+4. Select repository.
+
+Configuration:
+
+```txt
+Root Directory:
+backend
+
+Build Command:
+npm install
+
+Start Command:
+npm start
+```
+
+If using node directly:
+
+```txt
+node server.js
+```
+
+or
+
+```txt
+node index.js
+```
+
+depending on your project.
+
+---
+
+# Step 5: Add Backend Environment Variables
+
+Inside Render dashboard add:
+
+```env
+DATABASE_URL=YOUR_NEON_DATABASE_URL
+
+JWT_SECRET=YOUR_SECRET_KEY
+
+PORT=10000
+```
+
+Add every variable used in local `.env`.
+
+---
+
+# Step 6: Configure CORS
+
+Backend example:
+
+```js
+const cors = require("cors");
+
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://your-vercel-app.vercel.app"
+    ],
+    credentials: true,
+  })
+);
+```
+
+Update Vercel URL after deployment.
+
+---
+
+# Step 7: Deploy Frontend on Vercel
+
+1. Login to Vercel.
+2. Import GitHub repository.
+3. Select frontend directory.
+
+Configuration:
+
+```txt
+Framework:
+Vite
+
+Root Directory:
+frontend
+```
+
+---
+
+# Step 8: Configure Frontend Environment Variables
+
+Create environment variable in Vercel:
+
+```env
+VITE_API_URL=https://your-backend.onrender.com
+```
+
+---
+
+# Step 9: Configure Axios
+
+File:
+
+```txt
+frontend/src/api/axios.js
+```
+
+Example:
+
+```js
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+});
+
+export default api;
+```
+
+Avoid hardcoded localhost URLs.
+
+---
+
+# Step 10: Database Setup
+
+Run SQL scripts on Neon.
+
+Example:
+
+```sql
+CREATE TABLE users (...);
+
+CREATE TABLE posts (...);
+
+CREATE TABLE comments (...);
+
+CREATE TABLE likes (...);
+
+CREATE TABLE tag (...);
+
+CREATE TABLE posttag (...);
+```
+
+Use Neon SQL Editor to execute scripts.
+
+---
+
+# Step 11: Deploy Updates
+
+Whenever code changes:
+
+```bash
+git add .
+git commit -m "update"
+git push
+```
+
+Render and Vercel will automatically redeploy.
+
+---
+
+# Production Checklist
+
+## Backend
+
+* Database connected
+* Environment variables added
+* JWT secret configured
+* CORS configured
+* Render deployment successful
+
+## Frontend
+
+* Vercel deployment successful
+* API URL configured
+* Authentication working
+* API requests hitting Render backend
+
+## Database
+
+* Tables created
+* Foreign keys working
+* Seed data inserted (optional)
+
+---
+
+# Expected Production URLs
+
+Frontend:
+
+```txt
+https://your-blog.vercel.app
+```
+
+Backend:
+
+```txt
+https://your-api.onrender.com
+```
+
+Database:
+
+```txt
+Hosted on Neon PostgreSQL
+```
+
+---
+
+# Notes
+
+* Render free tier may sleep after inactivity.
+* First API request after sleeping can take 30–60 seconds.
+* Neon free tier is sufficient for personal portfolio projects.
+* Keep all secrets inside environment variables.
+* Never push `.env` files to GitHub.
+
+Deployment flow:
+
+GitHub → Render (Backend)
+GitHub → Vercel (Frontend)
+Render → Neon (Database)
