@@ -340,6 +340,25 @@ Week 4
 
 ***********************************************Deployment***********************************************
 
+postgresql://neondb_owner:npg_RNA2mjEMH3Fa@ep-sparkling-dream-atvmii7s.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require
+
+postgresql://neondb_owner:npg_RNA2mjEMH3Fa@ep-sparkling-dream-atvmii7s.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require
+
+Host
+ep-sparkling-dream-atvmii7s.c-9.us-east-1.aws.neon.tech
+Database
+neondb
+Role
+neondb_owner
+Password
+************
+npg_RNA2mjEMH3Fa
+Pooler host
+ep-sparkling-dream-atvmii7s-pooler.c-9.us-east-1.aws.neon.tech
+
+
+postgresql://neondb_owner:npg_RNA2mjEMH3Fa@ep-sparkling-dream-atvmii7s-pooler.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+
 # Blog App Deployment Guide
 
 ## Tech Stack

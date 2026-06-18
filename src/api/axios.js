@@ -2,7 +2,7 @@ import axios from "axios";
 import { useAuth } from "../store/authStore";
 
 const api = axios.create({
-    baseURL: import.meta.env.VITE_APP_API_PATH,
+    baseURL: `${import.meta.env.VITE_APP_API_PATH}/api`,
     timeout: 30000,
     headers: {
         "ngrok-skip-browser-warning": "69420",
