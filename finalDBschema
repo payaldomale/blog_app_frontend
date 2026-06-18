@@ -658,5 +658,5 @@ Hosted on Neon PostgreSQL
 Deployment flow:
 
 GitHub → Render (Backend) --> https://blog-app-backend-56bm.onrender.com/
-GitHub → Vercel (Frontend) (payal, payal5)
+GitHub → Vercel (Frontend) (payal, payal5) --> https://vercel.com/payal5/blog-app-frontend/5NEuJ2za9gWK47GP3YGKSNVTdSfD
 Render → Neon (Database) --> https://console.neon.tech/app/projects/cold-queen-23273946/branches/br-billowing-art-at1r5jwl/tables?database=neondb

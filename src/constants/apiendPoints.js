@@ -39,5 +39,4 @@ export const GET_ALL_TAGS = "api/tag/all";
 export const GET_POSTS_BY_TAG = (tagId) =>
     `api/tag/${tagId}/posts`;
 
-export const GET_TAGS_BY_POST = (postId) =>
-    `api/post/${postId}/tags`;
+
