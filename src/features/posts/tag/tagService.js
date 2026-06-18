@@ -4,7 +4,7 @@ import {
     ATTACH_TAG,
     GET_POSTS_BY_TAG,
     GET_TAGS_BY_POST,
-} from "../../../constants/apiEndPoints";
+} from "../../../constants/apiEndpoints";
 
 // get tags of a post
 export const getTagsByPost = async (postId) => {

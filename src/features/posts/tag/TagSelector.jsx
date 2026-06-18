@@ -4,7 +4,7 @@ import api from "../../../api/axios";
 import {
     GET_ALL_TAGS,
     CREATE_TAG,
-} from "../../../constants/apiEndPoints";
+} from "../../../constants/apiEndpoints";
 
 const getAllTags = async () => {
     const { data } = await api.get(GET_ALL_TAGS);
