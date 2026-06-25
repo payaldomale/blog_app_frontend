@@ -660,3 +660,95 @@ Deployment flow:
 GitHub → Render (Backend) --> https://blog-app-backend-56bm.onrender.com/
 GitHub → Vercel (Frontend) (payal, payal5) --> https://blog-app-frontend-two-chi.vercel.app/
 Render → Neon (Database) --> https://console.neon.tech/app/projects/cold-queen-23273946/branches/br-billowing-art-at1r5jwl/tables?database=neondb
+
+Why This 4 Feature?
+
+********AI Title Generator********
+********AI Tag Generator**********
+********AI Summary****************
+********Improve Writing***********
+
+My Recommendation
+
+Forget tags for now.
+
+Do this order:
+
+Phase 1
+
+AI Title Generator
+
+Phase 2
+
+AI Summary Generator
+
+Phase 3
+
+AI Writing Assistant
+
+Phase 4
+
+AI Tag Generator
+
+Notice tags come after you've already learned AI.
+
+****************************************
+Write article
+↓
+Click Generate Titles
+↓
+AI suggests 5 titles
+↓
+Pick one
+
+***************************************
+
+Because you'll learn:
+
+1. OpenAI API
+
+2. Prompt Engineering
+
+3. Backend AI Routes
+
+4. Frontend AI Integration
+
+5. Loading States
+
+6. Error Handling
+
+7. Real-world AI Product Development
+
+All from a single feature.
+
+AI-Powered Blogging Platform
+
+AI-Powered Blogging Platform
+
+Tech Stack:
+React
+Vite
+Node.js
+Express
+PostgreSQL
+OpenAI API
+React Query
+Zustand
+
+Features:
+• JWT Authentication
+• Blog CRUD
+• Comments
+• Likes
+• Tags
+• AI Title Generation
+• AI Tag Generation
+• AI Content Summarization
+• AI Writing Assistance
+• Responsive UI
+• Deployment on Vercel, Render, Neon
+
+• Built full-stack blogging platform using React, Node.js, Express and PostgreSQL.
+• Integrated OpenAI APIs for AI-powered title generation, content summarization, tag generation and writing assistance.
+• Implemented JWT authentication, post publishing workflow, comments, likes and tagging system.
+• Deployed frontend on Vercel, backend on Render and database on Neon PostgreSQL.
