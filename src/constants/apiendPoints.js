@@ -13,6 +13,10 @@ export const DELETE_POST = "api/post/removePost";
 export const GET_POSTS_BY_USER = "api/post/getPostsByUser";
 export const PUBLISH_POST = "api/post/publish";
 
+// posts-AI
+export const GENERATE_TITLE = "api/ai/generate-title";
+export const GENERATE_SUMMARY = "api/ai/generate-summary";
+
 // users
 export const GET_ALL_USERS = "api/user/getAllUsers";
 export const GET_USER_PROFILE = "api/user/search";

@@ -8,6 +8,8 @@ import {
     GET_POSTS_BY_USER,
     PUBLISH_POST,
     GET_PUBLISHED_POSTS,
+    GENERATE_TITLE,
+    GENERATE_SUMMARY,
 } from "../../constants/apiEndpoints";
 
 // Create Post
@@ -61,5 +63,22 @@ export const getPostsByUser = async (id) => {
 // Publish post
 export const publishPost = async (id) => {
     const res = await api.put(`${PUBLISH_POST}/${id}`);
+    return res.data;
+};
+
+// AI - Generate Titles
+export const generateTitles = async (content) => {
+    const res = await api.post(GENERATE_TITLE, {
+        content,
+    });
+
+    return res.data;
+};
+
+export const generateSummary = async (content) => {
+    const res = await api.post(GENERATE_SUMMARY, {
+        content,
+    });
+
     return res.data;
 };

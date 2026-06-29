@@ -660,3 +660,28 @@ Deployment flow:
 GitHub → Render (Backend)
 GitHub → Vercel (Frontend)
 Render → Neon (Database)
+
+
+
+AI-Powered Blogging Platform
+
+• Built a full-stack Medium-style blogging platform using React, Vite, Node.js, Express, and PostgreSQL.
+• Implemented JWT authentication, user profiles, posts, comments, likes, and tagging systems.
+• Integrated Google Gemini AI for title generation, article summarization, automatic tag generation, and writing enhancement.
+• Designed relational PostgreSQL schemas with optimized indexing and RESTful APIs.
+• Deployed frontend on Vercel, backend on Render, and PostgreSQL database on Neon.
+• Used React Query for server-state management and Zustand for client-side state management.
+
+
+Do BOTH in this order:
+
+*************Phase 1 (AI completion)****************
+Finish AI suite:
+1. tags
+2. improve writing
+3. grammar fix
+
+**************Phase 2 (Product features)*************
+1. bookmarks
+2. follow system
+3. trending posts

@@ -2,24 +2,27 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createPostSchema } from "./postSchema";
-import { createPost } from "./postService";
+import { createPost, generateTitles, generateSummary } from "./postService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-
-// ✅ TAGS
-import TagSelector from "./tag/TagSelector";
-import { attachTag } from "./tag/tagService";
 
 export default function CreatePost() {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
-    const [selectedTags, setSelectedTags] = useState([]);
+    const [aiTitles, setAiTitles] = useState([]);
+    const [loadingAI, setLoadingAI] = useState(false);
+
+    const [summaryLoading, setSummaryLoading] = useState(false);
+
+    const [summary, setSummary] = useState("");
 
     const {
         register,
         handleSubmit,
+        setValue,
+        watch,
         formState: { errors },
     } = useForm({
         resolver: zodResolver(createPostSchema),
@@ -28,25 +31,67 @@ export default function CreatePost() {
         },
     });
 
+    const content = watch("content");
+
+    // ---------------- AI TITLE GENERATION ----------------
+    const handleGenerateTitles = async () => {
+        if (!content || content.length < 20) {
+            toast.error("Write more content for better AI titles");
+            return;
+        }
+
+        try {
+            setLoadingAI(true);
+
+            const res = await generateTitles(content);
+
+            setAiTitles(res.titles || []);
+
+            toast.success("AI Titles Generated!");
+        } catch (err) {
+            toast.error("Failed to generate titles");
+        } finally {
+            setLoadingAI(false);
+        }
+    };
+
+    // ---------------- AI SUMMARY GENERATION ----------------
+    const handleGenerateSummary = async () => {
+        const content = watch("content");
+
+        if (!content || !content.trim()) {
+            toast.error("Please write content first");
+            return;
+        }
+
+        try {
+            setSummaryLoading(true);
+
+            const res = await generateSummary(content);
+
+            console.log("SUMMARY:", res);
+
+            if (res?.summary) {
+                setSummary(res.summary);   // ✅ THIS IS THE FIX
+                toast.success("Summary generated");
+            } else {
+                toast.error("No summary generated");
+            }
+
+        } catch (err) {
+            console.error(err);
+            toast.error("Failed to generate summary");
+        } finally {
+            setSummaryLoading(false);
+        }
+    };
+
+    // ---------------- CREATE POST ----------------
     const mutation = useMutation({
         mutationFn: createPost,
 
-        onSuccess: async (res) => {
+        onSuccess: () => {
             toast.success("Post created successfully");
-
-            const postId = res.post?.id || res.data?.id;
-
-            // ✅ ATTACH TAGS HERE
-            if (postId && selectedTags.length > 0) {
-                await Promise.all(
-                    selectedTags.map((tagId) =>
-                        attachTag({
-                            post_id: postId,
-                            tag_id: tagId,
-                        })
-                    )
-                );
-            }
 
             queryClient.invalidateQueries({
                 queryKey: ["posts"],
@@ -61,11 +106,7 @@ export default function CreatePost() {
     });
 
     const onSubmit = (data) => {
-        mutation.mutate({
-            title: data.title,
-            content: data.content,
-            status: data.status,
-        });
+        mutation.mutate(data);
     };
 
     return (
@@ -74,7 +115,7 @@ export default function CreatePost() {
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
-                {/* Title */}
+                {/* TITLE */}
                 <input
                     {...register("title")}
                     placeholder="Title"
@@ -87,7 +128,39 @@ export default function CreatePost() {
                     </p>
                 )}
 
-                {/* Content */}
+                {/* AI BUTTON */}
+                <button
+                    type="button"
+                    onClick={handleGenerateTitles}
+                    disabled={loadingAI}
+                    className="bg-purple-600 text-white px-3 py-2 rounded"
+                >
+                    {loadingAI ? "Generating..." : "✨ Generate AI Titles"}
+                </button>
+
+                {/* AI SUGGESTIONS */}
+                {aiTitles.length > 0 && (
+                    <div className="border p-3 rounded bg-slate-50">
+                        <p className="text-sm font-semibold mb-2">
+                            AI Suggestions:
+                        </p>
+
+                        <div className="flex flex-col gap-2">
+                            {aiTitles.map((t, i) => (
+                                <button
+                                    type="button"
+                                    key={i}
+                                    onClick={() => setValue("title", t)}
+                                    className="text-left px-2 py-1 hover:bg-slate-200 rounded"
+                                >
+                                    {t}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* CONTENT */}
                 <textarea
                     {...register("content")}
                     placeholder="Content"
@@ -100,7 +173,24 @@ export default function CreatePost() {
                     </p>
                 )}
 
-                {/* Status */}
+                {/* GENERATE SUMMARY */}
+                <button
+                    type="button"
+                    onClick={handleGenerateSummary}
+                    disabled={summaryLoading}
+                    className="bg-purple-600 text-white px-3 py-2 rounded"
+                >
+                    {summaryLoading ? "Generating..." : "✨ AI Summary"}
+                </button>
+
+                {summary && (
+                    <div className="mt-3 p-3 border rounded bg-slate-50">
+                        <p className="text-sm font-semibold mb-1">AI Summary:</p>
+                        <p className="text-sm text-slate-700">{summary}</p>
+                    </div>
+                )}
+
+                {/* STATUS */}
                 <select
                     {...register("status")}
                     className="w-full border p-2 rounded"
@@ -109,17 +199,11 @@ export default function CreatePost() {
                     <option value="published">Published</option>
                 </select>
 
-                {/* ✅ TAG SELECTOR */}
-                {/* <TagSelector
-                    selectedTags={selectedTags}
-                    setSelectedTags={setSelectedTags}
-                /> */}
-
-                {/* Submit */}
+                {/* SUBMIT */}
                 <button
                     type="submit"
                     disabled={mutation.isPending}
-                    className="bg-black text-white px-4 py-2 rounded disabled:opacity-50"
+                    className="bg-black text-white px-4 py-2 rounded"
                 >
                     {mutation.isPending ? "Creating..." : "Create Post"}
                 </button>
