@@ -675,13 +675,50 @@ AI-Powered Blogging Platform
 
 Do BOTH in this order:
 
-*************Phase 1 (AI completion)****************
+*************Phase 1 (AI completion)******************************
 Finish AI suite:
 1. tags
 2. improve writing
 3. grammar fix
 
-**************Phase 2 (Product features)*************
+**************Phase 2 (Product features)***************************
 1. bookmarks
 2. follow system
 3. trending posts
+
+
+**************Phase 3 (Portfolio Polish)****************************
+
+These aren't required, but they make the project feel more complete.
+
+Dark mode
+Responsive design audit
+Skeleton loaders
+Empty states
+Error boundaries
+Infinite scrolling
+Search debounce
+Image upload
+Reading time
+View count
+Share post
+Copy link
+Author pages
+SEO meta tags (if you later migrate to Next.js)
+
+
+**************Phase 4 (Resume-Level Enhancements)********************
+
+These features stand out in interviews.
+
+AI streaming responses (instead of waiting for the full output)
+AI chat assistant for writing
+Autosave drafts
+Version history
+Reading analytics
+Full-text search
+Notification system
+Refresh tokens
+Email verification
+Password reset
+Role-based admin panel

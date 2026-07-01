@@ -16,6 +16,9 @@ export const PUBLISH_POST = "api/post/publish";
 // posts-AI
 export const GENERATE_TITLE = "api/ai/generate-title";
 export const GENERATE_SUMMARY = "api/ai/generate-summary";
+export const GENERATE_TAGS = "api/ai/generate-tags";
+export const IMPROVE_WRITING = "api/ai/improve-writing";
+export const FIX_GRAMMAR = "api/ai/fix-grammar";
 
 // users
 export const GET_ALL_USERS = "api/user/getAllUsers";

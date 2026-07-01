@@ -10,6 +10,9 @@ import {
     GET_PUBLISHED_POSTS,
     GENERATE_TITLE,
     GENERATE_SUMMARY,
+    GENERATE_TAGS,
+    IMPROVE_WRITING,
+    FIX_GRAMMAR,
 } from "../../constants/apiEndpoints";
 
 // Create Post
@@ -75,8 +78,36 @@ export const generateTitles = async (content) => {
     return res.data;
 };
 
+// AI - Generate Summary
 export const generateSummary = async (content) => {
     const res = await api.post(GENERATE_SUMMARY, {
+        content,
+    });
+
+    return res.data;
+};
+
+// AI - Generate Tags
+export const generateTags = async (content) => {
+    const res = await api.post(GENERATE_TAGS, {
+        content,
+    });
+
+    return res.data;
+};
+
+// AI - Improve Writing
+export const improveWriting = async (content) => {
+    const res = await api.post(IMPROVE_WRITING, {
+        content,
+    });
+
+    return res.data;
+};
+
+// AI - Grammar Fix
+export const fixGrammar = async (content) => {
+    const res = await api.post(FIX_GRAMMAR, {
         content,
     });
 
