@@ -2,6 +2,7 @@ import api from "../../../api/axios";
 import {
     CREATE_TAG,
     ATTACH_TAG,
+    REPLACE_TAGS,
     GET_POSTS_BY_TAG,
     GET_TAGS_BY_POST,
 } from "../../../constants/apiEndPoints";
@@ -36,6 +37,15 @@ export const createTag = async (name) => {
     const { data } = await api.post(
         CREATE_TAG,
         { name }
+    );
+    return data;
+};
+
+// replace tags of a post
+export const replaceTags = async (payload) => {
+    const { data } = await api.put(
+        REPLACE_TAGS,
+        payload
     );
     return data;
 };

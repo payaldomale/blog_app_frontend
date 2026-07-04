@@ -722,3 +722,10 @@ Refresh tokens
 Email verification
 Password reset
 Role-based admin panel
+
+
+✅ CreatePost.jsx (fully updated)
+✅ UpdatePost.jsx (fully updated)
+✅ TagSelector.jsx (fully updated)
+✅ PostsByTag.jsx (new file)
+✅ AppRoutes.jsx (fully updated)

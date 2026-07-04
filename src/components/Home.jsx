@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getPublishedPosts } from "../features/posts/postService";
 import { Link } from "react-router-dom";
 import LikeButton from "../features/posts/likes/LikeButton";
+import PostTags from "../features/posts/tag/PostTags";
 
 export default function Home() {
     const { data, isLoading, isError } = useQuery({
@@ -82,6 +83,8 @@ export default function Home() {
                                     <p className="mt-2 text-slate-600 leading-relaxed">
                                         {getExcerpt(post.content)}
                                     </p>
+
+                                    <PostTags postId={post.id} />
 
                                     <div className="mt-3 text-sm text-slate-500 flex items-center gap-2">
                                         <span>by User #{post.author_id}</span>

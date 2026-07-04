@@ -48,3 +48,5 @@ export const GET_POSTS_BY_TAG = (tagId) =>
 
 export const GET_TAGS_BY_POST = (postId) =>
     `api/post/${postId}/tags`;
+
+export const REPLACE_TAGS = "api/tag/replace";
