@@ -13,6 +13,7 @@ import {
     GENERATE_TAGS,
     IMPROVE_WRITING,
     FIX_GRAMMAR,
+    SEARCH_POSTS,
 } from "../../constants/apiEndpoints";
 
 // Create Post
@@ -109,6 +110,17 @@ export const improveWriting = async (content) => {
 export const fixGrammar = async (content) => {
     const res = await api.post(FIX_GRAMMAR, {
         content,
+    });
+
+    return res.data;
+};
+
+// Search Posts
+export const searchPosts = async (query) => {
+    const res = await api.get(SEARCH_POSTS, {
+        params: {
+            q: query,
+        },
     });
 
     return res.data;
