@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import PostTags from "./tag/PostTags";
 
 export default function PostCard({ post }) {
     return (
@@ -20,6 +21,8 @@ export default function PostCard({ post }) {
                 <p className="mt-3 text-slate-600 line-clamp-3 leading-7">
                     {post.content}
                 </p>
+
+                <PostTags postId={post.id} />
 
                 {/* Footer */}
                 <div className="flex items-center gap-3 mt-4 text-sm text-slate-500">

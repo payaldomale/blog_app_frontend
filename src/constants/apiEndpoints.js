@@ -7,11 +7,19 @@ export const CREATE_POST = "api/post/create";
 export const GET_ALL_POSTS = "api/post/getAllPosts";
 export const GET_PUBLISHED_POSTS = "api/post/published";
 
-export const GET_POST_BY_ID = "api/post/getPostbyId";
+export const GET_POST_BY_ID = "api/post/getPostById";
 export const UPDATE_POST = "api/post/updatePost";
 export const DELETE_POST = "api/post/removePost";
 export const GET_POSTS_BY_USER = "api/post/getPostsByUser";
 export const PUBLISH_POST = "api/post/publish";
+export const SEARCH_POSTS = "api/post/query";
+
+// posts-AI
+export const GENERATE_TITLE = "api/ai/generate-title";
+export const GENERATE_SUMMARY = "api/ai/generate-summary";
+export const GENERATE_TAGS = "api/ai/generate-tags";
+export const IMPROVE_WRITING = "api/ai/improve-writing";
+export const FIX_GRAMMAR = "api/ai/fix-grammar";
 
 // users
 export const GET_ALL_USERS = "api/user/getAllUsers";
@@ -41,3 +49,5 @@ export const GET_POSTS_BY_TAG = (tagId) =>
 
 export const GET_TAGS_BY_POST = (postId) =>
     `api/post/${postId}/tags`;
+
+export const REPLACE_TAGS = "api/tag/replace";

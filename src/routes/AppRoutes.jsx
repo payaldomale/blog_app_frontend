@@ -9,6 +9,7 @@ import Register from "../features/auth/Register";
 import CreatePost from "../features/posts/CreatePost";
 import PostDetails from "../features/posts/PostDetails";
 import UpdatePost from "../features/posts/UpdatePost";
+import PostsByTag from "../features/posts/tag/PostsByTag";
 import Profile from "../pages/Profile";
 import MyPosts from "../pages/MyPosts";
 import Settings from "../pages/Settings";
@@ -24,6 +25,7 @@ export default function AppRoutes() {
                 <Route path="/posts/create" element={<CreatePost />} />
                 <Route path="/posts/:id" element={<PostDetails />} />
                 <Route path="/posts/edit/:id" element={<UpdatePost />} />
+                <Route path="/tag/:tagId" element={<PostsByTag />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/my-posts" element={<MyPosts />} />
                 <Route path="/settings" element={<Settings />} />

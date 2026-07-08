@@ -8,6 +8,12 @@ import {
     GET_POSTS_BY_USER,
     PUBLISH_POST,
     GET_PUBLISHED_POSTS,
+    GENERATE_TITLE,
+    GENERATE_SUMMARY,
+    GENERATE_TAGS,
+    IMPROVE_WRITING,
+    FIX_GRAMMAR,
+    SEARCH_POSTS,
 } from "../../constants/apiEndpoints";
 
 // Create Post
@@ -61,5 +67,61 @@ export const getPostsByUser = async (id) => {
 // Publish post
 export const publishPost = async (id) => {
     const res = await api.put(`${PUBLISH_POST}/${id}`);
+    return res.data;
+};
+
+// AI - Generate Titles
+export const generateTitles = async (content) => {
+    const res = await api.post(GENERATE_TITLE, {
+        content,
+    });
+
+    return res.data;
+};
+
+// AI - Generate Summary
+export const generateSummary = async (content) => {
+    const res = await api.post(GENERATE_SUMMARY, {
+        content,
+    });
+
+    return res.data;
+};
+
+// AI - Generate Tags
+export const generateTags = async (content) => {
+    const res = await api.post(GENERATE_TAGS, {
+        content,
+    });
+
+    return res.data;
+};
+
+// AI - Improve Writing
+export const improveWriting = async (content) => {
+    const res = await api.post(IMPROVE_WRITING, {
+        content,
+    });
+
+    return res.data;
+};
+
+// AI - Grammar Fix
+export const fixGrammar = async (content) => {
+    const res = await api.post(FIX_GRAMMAR, {
+        content,
+    });
+
+    return res.data;
+};
+
+// Search Posts
+export const searchPosts = async (query) => {
+    const res = await api.get(SEARCH_POSTS, {
+        params: {
+            q: query,
+        },
+    });
+
     return res.data;
 };
