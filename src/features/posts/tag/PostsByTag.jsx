@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import api from "../../../api/axios";
-import { GET_POSTS_BY_TAG } from "../../../constants/apiEndPoints";
+import { GET_POSTS_BY_TAG } from "../../../constants/apiEndpoints";
 
 import PostCard from "../../posts/PostCard";
 
