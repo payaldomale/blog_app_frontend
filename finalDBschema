@@ -724,25 +724,17 @@ Password reset
 Role-based admin panel
 
 
-✅ CreatePost.jsx (fully updated)
-✅ UpdatePost.jsx (fully updated)
-✅ TagSelector.jsx (fully updated)
-✅ PostsByTag.jsx (new file)
-✅ AppRoutes.jsx (fully updated)
-
 ********************Prompt 1*****************************
 
-So I have made one full-stack project called blog-app, which is based on 
-Medium which is using node-express, react(vite), postgresql and it has 
-features login, signup, jwt auth, posts crud, comments crud, likes, settings,
-profile, my posts, topbar, navbar, search posts etc and this version with this
-features is hosted on render, vercel and neon and in another branch called 
-development the ai features are implemented like generate title, generate summary,
-generate tags, improve writing, improve grammar, generate tags, etc but these 
-are not deployed yet
+So I have made one full-stack project called blog-app, which is based 
+on Medium which is using node-express, react(vite), postgresql and it 
+has features login, signup, jwt auth, posts crud, comments crud, likes, 
+settings, profile, my posts, topbar, navbar, search posts, ai features 
+are implemented like generate title, generate summary, generate tags, 
+improve writing, improve grammar, generate tags, etc and it is hosted 
+on render, vercel and neon.
 
 so what do you think now i should make other new projects or continue on it
-
 
 A portfolio that works well
 
